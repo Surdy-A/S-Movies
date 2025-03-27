@@ -1,0 +1,334 @@
+{%  extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+	<!-- home -->
+	<section class="home">
+		<!-- home bg -->
+		<div class="owl-carousel home__bg">
+			<div class="item home__cover" data-bg="{% static 'img/home/home__bg.jpg' %}"></div>
+			<div class="item home__cover" data-bg="{% static 'img/home/home__bg2.jpg' %}"></div>
+			<div class="item home__cover" data-bg="{% static 'img/home/home__bg3.jpg' %}"></div>
+			<div class="item home__cover" data-bg="{% static 'img/home/home__bg4.jpg' %}"></div>
+		</div>
+		<!-- end home bg -->
+
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<h1 class="home__title">Place Your <b>Advertisement</b> HERE</h1>
+
+					<button class="home__nav home__nav--prev" type="button">
+						<i class="icon ion-ios-arrow-round-back"></i>
+					</button>
+					<button class="home__nav home__nav--next" type="button">
+						<i class="icon ion-ios-arrow-round-forward"></i>
+					</button>
+				</div>
+
+				<div class="col-12">
+					<div class="owl-carousel home__carousel">
+						<div class="item">
+							<!-- card -->
+							<div class="card card--big">
+								<div class="card__cover">
+									<img src="{% static 'img/covers/cover.jpg' %}" alt="">
+									<a href="#" class="card__play">
+										<i class="icon ion-ios-play"></i>
+									</a>
+								</div>
+								<div class="card__content">
+									<h3 class="card__title"><a href="">Advert</a></h3>
+									<span class="card__category">
+										<a href="#">Advert</a>
+									</span>
+									<!-- <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span> -->
+								</div>
+							</div>
+							<!-- end card -->
+					
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end home -->
+
+	<!-- expected premiere -->
+	<section class="section section--bg" data-bg="img/section/section.jpg">
+		<div class="container">
+			<div class="row">
+				<!-- section title -->
+				<div class="col-12">
+					<h2 class="section__title">Nollywood Movies</h2>
+				</div>
+				<!-- end section title -->
+
+				<!-- card -->
+				{% for movie in nollyWoodMoviesList %}
+				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+					<div class="card">
+						<div class="card__cover">
+							<img src="{{movie.image.url}}" alt="">
+							<a href="{% url 'movies:movie_detail' id=movie.id %}" class="card__play">
+								<i class="icon ion-ios-play"></i>
+							</a>
+						</div>
+						<div class="card__content">
+							<h3 class="card__title">
+								{% if movie.is_series %}
+								<a href="{% url 'movies:series_movie_detail' movie_id=movie.id %}">{{movie.title}}</a>
+								{% else %}
+								<a href="{% url 'movies:movie_detail' id=movie.id %}">{{movie.title}}</a>
+								{% endif %}
+							
+							</h3>
+							<span class="card__category">
+								<a href="#">{{movie.genre}}</a>
+							</span>
+							<span class="card__rate"><i class="icon ion-ios-star"></i>{{ratings}}</span>
+						</div>
+					</div>
+				</div>
+				<!-- end card -->
+				{% endfor %}
+				<!-- section btn -->
+				<div class="col-12">
+					<a href="{% url 'movies:movie_list' cat='Nolly' %}" class="section__btn mb-0 pb-0">Show more</a>
+				</div>
+				<!-- end section btn -->
+			</div>
+		</div>
+	</section>
+	<!-- end expected premiere -->
+<!-- Nollywood Series premiere -->
+	<section class="section section--bg mt-0 pt-0" data-bg="img/section/section.jpg">
+		<div class="container">
+			<div class="row">
+				<!-- section title -->
+				<div class="col-12">
+					<h2 class="section__title">Nollywood Series</h2>
+				</div>
+				<!-- end section title -->
+				<!-- card -->
+				{% for movie in nollyWoodMoviesSeriesList %}
+				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+					<div class="card">
+						<div class="card__cover">
+							<img src="{{movie.image.url}}" alt="">
+							<a href="{% url 'movies:movie_detail' id=movie.id %}" class="card__play">
+								<i class="icon ion-ios-play"></i>
+							</a>
+						</div>
+						<div class="card__content">
+							<h3 class="card__title"><a href="{% url 'movies:movie_detail' id=movie.id %}">{{movie.title}}</a></h3>
+							<span class="card__category">
+								<a href="#">{{movie.genre}}</a>
+							</span>
+							<span class="card__rate"><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+				<!-- end card -->
+				<!-- section btn -->
+				<div class="col-12">
+					<a href="{% url 'movies:movie_list' cat='Nolly-S' %}" class="section__btn mb-0 pb-0">Show more</a>
+				</div>
+				<!-- end section btn -->
+			</div>
+		</div>
+	</section>
+	<!-- end expected premiere -->
+
+<!-- Nollywood Series premiere -->
+	<section class="section section--bg mt-0 pt-0" data-bg="img/section/section.jpg">
+		<div class="container">
+			<div class="row">
+				<!-- section title -->
+				<div class="col-12">
+					<h2 class="section__title">Hollywood Movies</h2>
+				</div>
+				<!-- end section title -->
+
+				<!-- card -->
+				{% for movie in hollyWoodMoviesList %}
+				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+					<div class="card">
+						<div class="card__cover">
+							<img src="{{movie.image.url}}" alt="">
+							<a href="{% url 'movies:movie_detail' id=movie.id %}" class="card__play">
+								<i class="icon ion-ios-play"></i>
+							</a>
+						</div>
+						<div class="card__content">
+							<h3 class="card__title"><a href="{% url 'movies:movie_detail' id=movie.id %}">{{movie.title}}</a></h3>
+							<span class="card__category">
+								<a href="#">{{movie.genre}}</a>
+							</span>
+							<span class="card__rate"><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span>
+						</div>
+					</div>
+				</div>
+				<!-- end card -->
+				{% endfor %}
+				<!-- end card -->
+				<!-- section btn -->
+				<div class="col-12">
+					<a href="{% url 'movies:movie_list' cat='Holly' %}" class="section__btn mb-0 pb-0">Show more</a>
+				</div>
+				<!-- end section btn -->
+			</div>
+		</div>
+	</section>
+	<!-- end expected premiere -->
+<!-- Nollywood Series premiere -->
+	<section class="section section--bg mt-0 pt-0" data-bg="img/section/section.jpg">
+		<div class="container">
+			<div class="row">
+				<!-- section title -->
+				<div class="col-12">
+					<h2 class="section__title">Hollywood Series</h2>
+				</div>
+				<!-- end section title -->
+
+				<!-- card -->
+				{% for movie in hollyWoodMoviesSeriesList %}
+				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+					<div class="card">
+						<div class="card__cover">
+							<img src="{{movie.image.url}}" alt="">
+							<a href="{% url 'movies:movie_detail' id=movie.id %}" class="card__play">
+								<i class="icon ion-ios-play"></i>
+							</a>
+						</div>
+						<div class="card__content">
+							<h3 class="card__title"><a href="{% url 'movies:movie_detail' id=movie.id %}">{{movie.title}}</a></h3>
+							<span class="card__category">
+								<a href="#">{{movie.genre}}</a>
+							</span>
+							<span class="card__rate"><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span>
+						</div>
+					</div>
+				</div>
+				<!-- end card -->
+				{% endfor %}
+				<!-- end card -->
+				<!-- section btn -->
+				<div class="col-12">
+					<a href="{% url 'movies:movie_list' cat='Holly-S' %}" class="section__btn mb-0 pb-0">Show more</a>
+				</div>
+				<!-- end section btn -->
+			</div>
+		</div>
+	</section>
+	<!-- end expected premiere -->
+
+<!-- Nollywood Series premiere -->
+
+	<section class="section section--bg mt-0 pt-0" data-bg="img/section/section.jpg">
+		<div class="container">
+			<div class="row">
+				<!-- section title -->
+				<div class="col-12">
+					<h2 class="section__title">Foreign Movies</h2>
+				</div>
+				<!-- end section title -->
+				<!-- card -->
+				{% for movie in foreignList %}
+				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+					<div class="card">
+						<div class="card__cover">
+							<img src="{{movie.image.url}}" alt="">
+							<a href="{% url 'movies:movie_detail' id=movie.id %}" class="card__play">
+								<i class="icon ion-ios-play"></i>
+							</a>
+						</div>
+						<div class="card__content">
+							<h3 class="card__title"><a href="{% url 'movies:movie_detail' id=movie.id %}">{{movie.title}}</a></h3>
+							<span class="card__category">
+								<a href="#">{{movie.genre}}</a>
+							</span>
+							<span class="card__rate"><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span>
+						</div>
+					</div>
+				</div>
+				<!-- end card -->
+				{% endfor %}
+				<!-- end card -->
+				<!-- section btn -->
+				<div class="col-12">
+					<a href="{% url 'movies:movie_list' cat='FOR' %}" class="section__btn mb-0 pb-0">Show more</a>
+				</div>
+				<!-- end section btn -->
+			</div>
+		</div>
+	</section>
+	<!-- end expected premiere -->
+
+	<!-- Nollywood Series premiere -->
+	<section class="section section--bg mt-0 pt-0" data-bg="img/section/section.jpg">
+		<div class="container">
+			<div class="row">
+				<!-- section title -->
+				<div class="col-12">
+					<h2 class="section__title">Korean Movies</h2>
+				</div>
+				<!-- end section title -->
+
+				<!-- card -->
+				{% for movie in koreanList %}
+				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+					<div class="card">
+						<div class="card__cover">
+							<img src="{{movie.image.url}}" alt="">
+							<a href="{% url 'movies:movie_detail' id=movie.id %}" class="card__play">
+								<i class="icon ion-ios-play"></i>
+							</a>
+						</div>
+						<div class="card__content">
+							<h3 class="card__title"><a href="{% url 'movies:movie_detail' id=movie.id %}">{{movie.title}}</a></h3>
+							<span class="card__category">
+								<a href="#">{{movie.genre}}</a>
+							</span>
+							<span class="card__rate"><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span>
+						</div>
+					</div>
+				</div>
+				<!-- end card -->
+				{% endfor %}
+				<!-- end card -->
+				<!-- section btn -->
+				<div class="col-12">
+					<a href="{% url 'movies:movie_list' cat='KOR' %}" class="section__btn mb-0 pb-0">Show more</a>
+				</div>
+				<!-- end section btn -->
+			</div>
+		</div>
+	</section>
+	<!-- end expected premiere -->
+	<!-- partners -->
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<!-- section title -->
+				<div class="col-12">
+					<h2 class="section__title section__title--no-margin"><b>Premium Entertainment</b></h2>
+				</div>
+				<!-- end section title -->
+
+				<!-- section text -->
+				<div class="col-12">
+					<p class="section__text section__text--last-with-margin">At <b>SMovies</b>, we believe in delivering the best entertainment 
+					experience to our users. We are proud to collaborate with a diverse network of industry-leading 
+					partners who help us bring high-quality movies, seamless downloads, and top-notch streaming 
+					services to our platform.</p>
+				</div>
+				<!-- end section text -->
+			</div>
+		</div>
+	</section>
+	<!-- end partners -->
+{% endblock %}
+

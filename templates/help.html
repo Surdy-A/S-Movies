@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}	<!-- page title -->
+	<section class="section section--first section--bg" data-bg="{% static 'img/section/section.jpg' %}">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="section__wrap">
+						<!-- section title -->
+						<h2 class="section__title">Help & Support - Movie Download Guide</h2>
+						<!-- end section title -->
+
+						<!-- breadcrumb -->
+						<ul class="breadcrumb">
+							<li class="breadcrumb__item"><a href="/movies">Home</a></li>
+							<li class="breadcrumb__item breadcrumb__item--active">HELP</li>
+						</ul>
+						<!-- end breadcrumb -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end page title -->
+
+	<!-- faq -->
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-md-6">
+					<div class="faq">
+						<h3 class="faq__title">How to Download Movies</h3>
+						<p class="faq__text">Step 1: Browse or Search for a Movie
+                            Use the search bar at the top of the homepage to find a specific movie or series.
+                            Browse through categories like Action, Comedy, Drama, Horror, Sci-Fi, Animation, and TV Shows.
+                            Click on the movie or series you want to download to view its details.</p>
+						<p class="faq__text">Step 2: Select the Download Option
+                            On the Movie Detail Page, scroll down to the Download Section.
+                            Choose from available formats:
+                            HD (1080p/720p) – Best quality, larger file size.
+                            SD (480p/360p) – Smaller file size, faster download.
+                            Mobile (MP4, 3GP) – Optimized for mobile devices.
+                            <br/><br/>
+                            Step 3: Click the Download Button
+                            Click the "Download Now" button for your preferred quality.
+                            If the download doesn't start automatically:
+                            Right-click the button and select "Save Link As" to manually download.
+                            Ensure your browser allows downloads from our site.</p>
+                            <p class="faq__text">
+                                Step 3: Click the Download Button
+                                Click the "Download Now" button for your preferred quality.
+                                If the download doesn't start automatically:
+                                Right-click the button and select "Save Link As" to manually download.
+                                Ensure your browser allows downloads from our site.</p>
+					</div>
+				</div>
+
+				<div class="col-12 col-md-6">
+					<div class="faq">
+						<h3 class="faq__title">📌 Streaming Movies & Episodes</h3>
+						<p class="faq__text">If you don't want to download, you can stream movies online.
+                            Click the "Watch Online" button to start streaming.
+                            Ensure you have a stable internet connection for smooth playback.</p>
+					</div>
+
+					<div class="faq">
+						<h3 class="faq__title">📌 Common Download Issues & Fixes</h3>
+						<p class="faq__text">1️⃣ Download Link Not Working
+                            Try refreshing the page and clicking the button again.
+                            Disable any ad-blockers that may be preventing the link from opening.<br/>
+                            2️⃣ Slow Download Speed
+                            Use a strong Wi-Fi or 4G/5G connection.
+                            Try downloading during off-peak hours.<br/>
+                            3️⃣ File Not Opening After Download
+                            Ensure you have a compatible media player like VLC Media Player.
+                            If the file is a .zip or .rar, extract it using WinRAR or 7-Zip.</p><br/>
+					</div>
+                    <div class="faq">
+						<h3 class="faq__title">How to Download TV Series</h3>
+						<p class="faq__text">Go to the Series Page and select a season from the accordion list.
+                            Click on an episode title to open the download page.
+                            Choose your preferred video quality and click Download.</p>
+					</div>
+					<!-- <div class="faq">
+						<h3 class="faq__title">How do you handle my privacy?</h3>
+						<p class="faq__text">Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
+					</div>
+
+					<div class="faq">
+						<h3 class="faq__title">How can I contact you?</h3>
+						<p class="faq__text">The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</p>
+					</div>
+                -->
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end faq -->
+    {% endblock body %}

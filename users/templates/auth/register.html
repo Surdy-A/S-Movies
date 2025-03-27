@@ -1,0 +1,64 @@
+{% extends "base.html" %} {% load static %} {% block body %}
+<div class="sign section--bg" data-bg="{% static 'img/section/section.jpg' %}">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sign__content">
+          <!-- registration form -->
+          <form
+            action="#"
+            class="sign__form"
+            enctype="multipart/form-data"
+            method="post"
+          >
+            {% csrf_token %}
+            <a href="/" class="sign__logo">
+              <img src="{% static 'img/logo.svg' %}" alt="" />
+            </a>
+
+            <div class="sign__group">
+              {{form.first_name}}
+            </div>
+
+            <div class="sign__group">
+              {{ form.last_name }}
+            </div>
+
+            <div class="sign__group">
+              {{ form.username }}
+            </div>
+
+            <div class="sign__group">
+              {{ form.email }}
+            </div>
+
+            <div class="sign__group">
+              {{ form.password1 }}
+            </div>
+
+            <div class="sign__group">
+              {{ form.password2 }}
+            </div>
+
+            <div class="sign__group">
+            {{ form.image }}
+            </div>
+
+            <div class="sign__group sign__group--checkbox">
+              {{ form.agree }} 
+              <label for="remember">I agree to the <a href="">Privacy Policy</a></label>
+            </div>
+
+            <button class="sign__btn" type="Submit">Sign up</button>
+
+            <span class="sign__text"
+              >Already have an account? <a href="signin.html">Sign in!</a></span
+            >
+          </form>
+          <!-- registration form -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

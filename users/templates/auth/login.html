@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% load static %} {% block body %}
+<div class="sign section--bg" data-bg="{% static 'img/section/section.jpg' %}">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="sign__content">
+          <!-- registration form -->
+          <form action="#"  method="post" class="sign__form">
+            {% csrf_token %}
+            <a href="/" class="sign__logo">
+              <img src="{% static 'img/logo.svg' %}" alt="">
+            </a>
+
+            <div class="sign__group">
+              <input type="text" class="sign__input" name="username" id="username" placeholder="Username">
+            </div>
+
+            <div class="sign__group">
+              <input type="password" class="sign__input" name="password" id="password" placeholder="Password">
+            </div>
+
+            <div class="sign__group sign__group--checkbox">
+              <input id="remember" name="remember" type="checkbox" checked="checked">
+              <label for="remember">Remember Me</label>
+            </div>
+            
+            <button class="sign__btn" type="submit">Sign in</button>
+
+            <span class="sign__text">Don't have an account? <a href="{% url "users:register" %}">Sign up!</a></span>
+
+            <span class="sign__text"><a href="#">Forgot password?</a></span>
+          </form>
+          <!-- registration form -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

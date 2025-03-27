@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Welcome, {{ user.username }}</h2>
+  <p>First Name: {{ user.first_name }}</p>
+  <p>Last Name: {{ user.last_name }}</p>
+  <p>Email: {{ user.email }}</p>
+  <p>Date Joined: {{ user.date_joined }}</p>
+  {% if user.image %}
+    <img src="{{ user.image.url }}" alt="Profile Image" width="100">
+  {% endif %}
+  <br>
+  <a href="{% url 'logout' %}">Logout</a>
+{% endblock %}
