@@ -3717,3 +3717,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 padding-left:0px !important;
 margin-left:0px !important;
 }
+
+/* Add to your CSS file */
+.dislike-button.active {
+    color: #e74c3c;
+}

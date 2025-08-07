@@ -1,14 +1,10 @@
 from django.contrib import admin
-from .models import Movie, Rating, Season, Episode, Review
+from .models import Movie, Rating, Season, Episode, Review, Category, MoviePhoto, Comment
 
 # Register your models here.
 # admin.site.register(Movie)
 admin.site.register(Rating)
 
-from django.contrib import admin
-from .models import Movie, Season, Episode, Comment
-
-@admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
     list_display = ("title", "genre", "year", "rating", "created_at")
     search_fields = ("title", "genre", "year")
@@ -39,3 +35,18 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Comment)
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+
+class MoviePhotoInline(admin.TabularInline):
+    model = MoviePhoto
+    extra = 1
+
+class MovieAdmin(admin.ModelAdmin):
+    inlines = [MoviePhotoInline]
+
+admin.site.register(Movie, MovieAdmin)

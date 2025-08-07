@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- Font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
@@ -266,6 +266,123 @@
 			</div>
 		</div>
 	</div>
+
+	
+<!-- Comments-->
+<script>
+
+$(document).ready(function() {
+    // Show/hide reply form
+    $('.reply-btn').click(function() {
+        var commentId = $(this).data('comment-id');
+        $('#reply-form-' + commentId).toggle();
+    });
+
+    // Handle reply form submission
+    $('.reply-form').submit(function(e) {
+        e.preventDefault();
+        var $form = $(this);
+        var parentId = $form.data('parent-id');
+        var text = $form.find('textarea[name="text"]').val();
+        $.ajax({
+            url: '/movies/comments/' + parentId + '/reply/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'text': text
+            },
+            success: function(response) {
+                // Append the new reply to the replies list
+                var replyHtml = `
+                <li class="comments__item comments__item--answer">
+                    <div class="comments__autor">
+                        <img class="comments__avatar" src="${response.user_avatar}" alt="profile picture">
+                        <span class="comments__name">${response.user}</span>
+                        <span class="comments__time">${response.created_at}</span>
+                    </div>
+                    <p class="comments__text">${response.text}</p>
+                </li>`;
+                $('#reply-form-' + parentId).hide();
+                $('#reply-form-' + parentId).siblings('.comments__replies').append(replyHtml);
+                $form[0].reset();
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+    $('.dislike-button').click(function() {
+        var commentId = $(this).data('comment-id');
+        var countSpan = $('#dislike-count-' + commentId);
+        // Demo: just increment locally
+        var count = parseInt(countSpan.text()) || 0;
+        countSpan.text(count + 1);
+
+        // TODO: Make AJAX call to backend to save dislike
+$(document).ready(function() {
+    $('.dislike-button').click(function() {
+        var $btn = $(this);
+        var commentId = $btn.data('comment-id');
+        var countSpan = $('#dislike-count-' + commentId);
+
+        $.ajax({
+            url: '/movies/comments/' + commentId + '/dislike/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                countSpan.text(response.dislikes);
+                // Toggle active class for visual feedback
+                if (response.disliked) {
+                    $btn.addClass('active');
+                } else {
+                    $btn.removeClass('active');
+                }
+            }
+        });
+    });
+});
+
+    });
+});
+
+
+
+$(document).ready(function() {
+    $('.like-button').click(function() {
+        var commentId = $(this).data('comment-id');
+        var countSpan = $('#like-count-' + commentId);
+
+        // TODO: Make AJAX call to backend to save dislike
+$(document).ready(function() {
+    $('.like-button').click(function() {
+        var $btn = $(this);
+        var commentId = $btn.data('comment-id');
+        var countSpan = $('#like-count-' + commentId);
+
+        $.ajax({
+            url: '/movies/comments/' + commentId + '/like/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                countSpan.text(response.likes);
+                // Toggle active class for visual feedback
+                if (response.liked) {
+                    $btn.addClass('active');
+                } else {
+                    $btn.removeClass('active');
+                }
+            }
+        });
+    });
+});
+    });
+});
+</script>	
+
 
 	<!-- JS -->
 	<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>

@@ -54,8 +54,8 @@
 									</ul>
 									<div class="card__description card__description--details">
 									{{movie.description}}
-									<p><a href="{{movie.download_link}}" target="_blank" class="section__btn" id="download_btn">Download</a></p>
 									</div>
+									<p><a href="{{movie.download_link}}" target="_blank" class="section__btn" id="download_btn">Download</a></p>
 								</div>
 							</div>
 							<!-- end card content -->
@@ -156,72 +156,91 @@
 											{% if comment.is_parent and comment.user == request.user %}
 											<li class="comments__item">
 												<div class="comments__autor">
-													<img class="comments__avatar" src="{% if comment.user.profile_picture.url %}
-													{{ comment.user.profile_picture.url}}
-													{% else %}
-													{% static 'img/user.png' %}"
-													{% endif %}  alt="profile picture">
+													<img class="comments__avatar" src="{% if comment.user.profile_picture and comment.user.profile_picture.url %}{{ comment.user.profile_picture.url }}{% else %}{% static 'img/user.png' %}{% endif %}" alt="profile picture">
 													<span class="comments__name">{{comment.user}} </span>
 													<span class="comments__time">{{comment.created_at}}</span>
 												</div>
 												<p class="comments__text">{{comment.text}}</p>
 												<div class="comments__actions">
 													<div class="comments__rate">
-														<button class="like-button" data-comment-id="{{ comment.id }}">
-															<i class="icon ion-md-thumbs-up"></i> 
-															<span id="like-count-{{ comment.id }}">{{ comment.likes }}</span>
-														</button>
-
-														<button type="button" id="like-count-{{ comment.id }}">{{comment.dislikes}}<i class="icon ion-md-thumbs-down"></i></button>
+														
+<button class="like-button{% if user in comment.likes.all %} active{% endif %}" data-comment-id="{{ comment.id }}">
+    <span id="like-count-{{ comment.id }}">{{ comment.likes.count }}</span>
+    <i class="icon ion-md-thumbs-up"></i>
+</button>
+<button class="dislike-button{% if user in comment.dislikes.all %} active{% endif %}" data-comment-id="{{ comment.id }}">
+    <span id="dislike-count-{{ comment.id }}">{{ comment.dislikes.count }}</span>
+    <i class="icon ion-md-thumbs-down"></i>
+</button>
 													</div>
+													<button type="button" class="reply-btn" data-comment-id="{{ comment.id }}">
+    <i class="icon ion-ios-share-alt"></i>Reply
+</button>
 
-													<button type="button"><i class="icon ion-ios-share-alt"></i><a href="#reply">Reply</a></button>
+<div class="reply-form-container" id="reply-form-{{ comment.id }}" style="display:none;">
+    <form method="POST" class="reply-form" data-parent-id="{{ comment.id }}">
+        {% csrf_token %}
+        <textarea name="text" class="form__textarea" placeholder="Add a reply"></textarea>
+        <button type="submit" class="form__btn">Send</button>
+    </form>
 													<button type="button"><i class="icon ion-ios-quote"></i>Quote</button>
 												</div>
 											</li>
 											{% else %}
-											<li class="comments__item comments__item--answer">
-												<div class="comments__autor">
-													<img class="comments__avatar" src="img/user.png" alt="">
-													<span class="comments__name">{{comment.user}}</span>
-													<span class="comments__time">{{comment.created_at}}</span>
-												</div>
-												<p class="comments__text">{{comment.text}}</p>
-												<div class="comments__actions">
-													<div class="comments__rate">
-														<button class="like-button" data-comment-id="{{ comment.id }}">
-															<i class="icon ion-md-thumbs-up"></i> 
-															<span id="like-count-{{ comment.id }}">{{ comment.likes }}</span>
-														</button>
-
-														<button type="button">{{comment.dislikes}}<i class="icon ion-md-thumbs-down"></i></button>
-													</div>
-
-													<button type="button"><i class="icon ion-ios-share-alt"></i><a href="#reply">Reply</a></button>
-													<button type="button"><i class="icon ion-ios-quote"></i>Quote</button>
-												</div>
-											</li>
+																						<script>
+											$(document).ready(function() {
+												// Show/hide reply form
+												$('.reply-btn').click(function() {
+													var commentId = $(this).data('comment-id');
+													$('#reply-form-' + commentId).toggle();
+												});
+											
+												// Handle reply form submission
+												$('.reply-form').submit(function(e) {
+													e.preventDefault();
+													var $form = $(this);
+													var parentId = $form.data('parent-id');
+													var text = $form.find('textarea[name="text"]').val();
+													$.ajax({
+														url: '/movies/comments/' + parentId + '/reply/',
+														type: 'POST',
+														data: {
+															'csrfmiddlewaretoken': '{{ csrf_token }}',
+															'text': text
+														},
+														success: function(response) {
+															// Build the reply HTML
+															var replyHtml = `
+    <li class="comments__item comments__item--answer">
+        <div class="comments__autor">
+            <img class="comments__avatar" src="/static/img/user.png" alt="profile picture">
+            <span class="comments__name">${response.user}</span>
+            <span class="comments__time">${response.created_at}</span>
+        </div>
+        <p class="comments__text">${response.text}</p>
+    </li>`;
+															// Append to the replies list after the parent comment
+															$form.closest('.comments__item').find('ul').append(replyHtml);
+															$form[0].reset();
+															$form.parent().hide();
+														}
+													});
+												});
+											});
+											</script>
 											{% endif %}
 
-										<!--	<li class="comments__item comments__item--quote">
-												<div class="comments__autor">
-													<img class="comments__avatar" src="img/user.png" alt="">
-													<span class="comments__name">John Doe</span>
-													<span class="comments__time">11.08.2018, 11:11</span>
-												</div>
-												<p class="comments__text"><span>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</span>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-												<div class="comments__actions">
-													<div class="comments__rate">
-														<button type="button"><i class="icon ion-md-thumbs-up"></i>11</button>
-
-														<button type="button">1<i class="icon ion-md-thumbs-down"></i></button>
-													</div>
-
-													<button type="button"><i class="icon ion-ios-share-alt"></i>Reply</button>
-													<button type="button"><i class="icon ion-ios-quote"></i>Quote</button>
-												</div>
-											</li>
-										-->
+											{% for reply in comment.replies.all %}
+    <li class="comments__item comments__item--answer">
+        <div class="comments__autor">
+            <img class="comments__avatar" src="{% if reply.user.profile_picture.url %}{{ reply.user.profile_picture.url }}{% else %}{% static 'img/user.png' %}{% endif %}" alt="profile picture">
+            <span class="comments__name">{{ reply.user }}</span>
+            <span class="comments__time">{{ reply.created_at }}</span>
+        </div>
+        <p class="comments__text">{{ reply.text }}</p>
+    </li>
+    {% endfor %}
+										
 											</ul>
 										{% endfor %}
 										<form action="{% url 'movies:movie_detail' movie.id %}" method="POST" id="reply" class="form">
@@ -238,6 +257,7 @@
 						<div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab">
 							<div class="row">
 								<!-- reviews -->
+										Review	{{reviews}}
 								<div class="col-12">
 									<div class="reviews">
 										<ul class="reviews__list">
@@ -260,7 +280,7 @@
 										</ul>
 
 										{% if user.is_authenticated %}
-										<form method="POST" class="form" action="/add-comment">
+										<form method="POST" class="form" action="{% url 'movies:movie_detail' movie.id %}">
 											{% csrf_token %}
 											<input type="text" class="form__input" placeholder="Title" name="title" required>
 											<textarea class="form__textarea" placeholder="Review" name="content" required></textarea>
@@ -284,59 +304,16 @@
 							<!-- project gallery -->
 							<div class="gallery" itemscope>
 								<div class="row">
+									{% for photo  in photos %}
 									<!-- gallery item -->
 									<figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>
-										<a href="img/gallery/project-1.jpg" itemprop="contentUrl" data-size="1920x1280">
-											<img src="img/gallery/project-1.jpg" itemprop="thumbnail" alt="Image description" />
+										<a href="{{photo.image.url }}" itemprop="contentUrl" data-size="1920x1280">
+											<img src="{{ photo.image.url }}" itemprop="thumbnail" alt="{{ photo.caption}}" />
 										</a>
-										<figcaption itemprop="caption description">Some image caption 1</figcaption>
+										<figcaption itemprop="caption description">{{photo.caption}}</figcaption>
 									</figure>
 									<!-- end gallery item -->
-
-									<!-- gallery item -->
-									<figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>
-										<a href="img/gallery/project-2.jpg" itemprop="contentUrl" data-size="1920x1280">
-											<img src="img/gallery/project-2.jpg" itemprop="thumbnail" alt="Image description" />
-										</a>
-										<figcaption itemprop="caption description">Some image caption 2</figcaption>
-									</figure>
-									<!-- end gallery item -->
-
-									<!-- gallery item -->
-									<figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>
-										<a href="img/gallery/project-3.jpg" itemprop="contentUrl" data-size="1920x1280">
-											<img src="img/gallery/project-3.jpg" itemprop="thumbnail" alt="Image description" />
-										</a>
-										<figcaption itemprop="caption description">Some image caption 3</figcaption>
-									</figure>
-									<!-- end gallery item -->
-
-									<!-- gallery item -->
-									<figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>
-										<a href="img/gallery/project-4.jpg" itemprop="contentUrl" data-size="1920x1280">
-											<img src="img/gallery/project-4.jpg" itemprop="thumbnail" alt="Image description" />
-										</a>
-										<figcaption itemprop="caption description">Some image caption 4</figcaption>
-									</figure>
-									<!-- end gallery item -->
-
-									<!-- gallery item -->
-									<figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>
-										<a href="img/gallery/project-5.jpg" itemprop="contentUrl" data-size="1920x1280">
-											<img src="img/gallery/project-5.jpg" itemprop="thumbnail" alt="Image description" />
-										</a>
-										<figcaption itemprop="caption description">Some image caption 5</figcaption>
-									</figure>
-									<!-- end gallery item -->
-
-									<!-- gallery item -->
-									<figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>
-										<a href="img/gallery/project-6.jpg" itemprop="contentUrl" data-size="1920x1280">
-											<img src="img/gallery/project-6.jpg" itemprop="thumbnail" alt="Image description" />
-										</a>
-										<figcaption itemprop="caption description">Some image caption 6</figcaption>
-									</figure>
-									<!-- end gallery item -->
+									{% endfor %}
 								</div>
 							</div>
 							<!-- end project gallery -->
@@ -354,130 +331,27 @@
 						</div>
 						<!-- end section title -->
 
+						{% for suggestion in suggestions %}
 						<!-- card -->
 						<div class="col-6 col-sm-4 col-lg-6">
 							<div class="card">
 								<div class="card__cover">
-									<img src="img/covers/cover.jpg" alt="">
-									<a href="#" class="card__play">
+									<img src="{{suggestion.image.url}}" alt="">
+									<a href="{% url 'movies:movie_detail' suggestion.id %}" class="card__play">
 										<i class="icon ion-ios-play"></i>
 									</a>
 								</div>
 								<div class="card__content">
-									<h3 class="card__title"><a href="#">I Dream in Another Language</a></h3>
+									<h3 class="card__title"><a href="{% url 'movies:movie_detail' suggestion.id %}">{{suggestion.title}}</a></h3>
 									<span class="card__category">
-										<a href="#">Action</a>
-										<a href="#">Triler</a>
+										<a href="{% url 'movies:movie_detail' suggestion.id %}">{{suggestion.genre}}</a>
 									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
+									<span class="card__rate"><i class="icon ion-ios-star"></i>{{suggestion.rating}}</span>
 								</div>
 							</div>
 						</div>
 						<!-- end card -->
-
-						<!-- card -->
-						<div class="col-6 col-sm-4 col-lg-6">
-							<div class="card">
-								<div class="card__cover">
-									<img src="img/covers/cover2.jpg" alt="">
-									<a href="#" class="card__play">
-										<i class="icon ion-ios-play"></i>
-									</a>
-								</div>
-								<div class="card__content">
-									<h3 class="card__title"><a href="#">Benched</a></h3>
-									<span class="card__category">
-										<a href="#">Comedy</a>
-									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>
-								</div>
-							</div>
-						</div>
-						<!-- end card -->
-
-						<!-- card -->
-						<div class="col-6 col-sm-4 col-lg-6">
-							<div class="card">
-								<div class="card__cover">
-									<img src="img/covers/cover3.jpg" alt="">
-									<a href="#" class="card__play">
-										<i class="icon ion-ios-play"></i>
-									</a>
-								</div>
-								<div class="card__content">
-									<h3 class="card__title"><a href="#">Whitney</a></h3>
-									<span class="card__category">
-										<a href="#">Romance</a>
-										<a href="#">Drama</a>
-										<a href="#">Music</a>
-									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>6.3</span>
-								</div>
-							</div>
-						</div>
-						<!-- end card -->
-
-						<!-- card -->
-						<div class="col-6 col-sm-4 col-lg-6">
-							<div class="card">
-								<div class="card__cover">
-									<img src="img/covers/cover4.jpg" alt="">
-									<a href="#" class="card__play">
-										<i class="icon ion-ios-play"></i>
-									</a>
-								</div>
-								<div class="card__content">
-									<h3 class="card__title"><a href="#">Blindspotting</a></h3>
-									<span class="card__category">
-										<a href="#">Comedy</a>
-										<a href="#">Drama</a>
-									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>7.9</span>
-								</div>
-							</div>
-						</div>
-						<!-- end card -->
-
-						<!-- card -->
-						<div class="col-6 col-sm-4 col-lg-6">
-							<div class="card">
-								<div class="card__cover">
-									<img src="img/covers/cover5.jpg" alt="">
-									<a href="#" class="card__play">
-										<i class="icon ion-ios-play"></i>
-									</a>
-								</div>
-								<div class="card__content">
-									<h3 class="card__title"><a href="#">I Dream in Another Language</a></h3>
-									<span class="card__category">
-										<a href="#">Action</a>
-										<a href="#">Triler</a>
-									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
-								</div>
-							</div>
-						</div>
-						<!-- end card -->
-
-						<!-- card -->
-						<div class="col-6 col-sm-4 col-lg-6">
-							<div class="card">
-								<div class="card__cover">
-									<img src="img/covers/cover6.jpg" alt="">
-									<a href="#" class="card__play">
-										<i class="icon ion-ios-play"></i>
-									</a>
-								</div>
-								<div class="card__content">
-									<h3 class="card__title"><a href="#">Benched</a></h3>
-									<span class="card__category">
-										<a href="#">Comedy</a>
-									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>
-								</div>
-							</div>
-						</div>
-						<!-- end card -->
+						 {% endfor %}
 					</div>
 				</div>
 				<!-- end sidebar -->
@@ -624,3 +498,92 @@
 
 </html>
 {% endblock %}
+<script>
+$(document).ready(function() {
+    // Remove previous handlers and add new one
+    $(document).off('click', '.like-button').on('click', '.like-button', function() {
+        var $btn = $(this);
+        var commentId = $btn.data('comment-id');
+        var countSpan = $('#like-count-' + commentId);
+
+        $.ajax({
+            url: '/movies/comments/' + commentId + '/like/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                countSpan.text(response.likes);
+                if (response.liked) {
+                    $btn.addClass('active');
+                } else {
+                    $btn.removeClass('active');
+                }
+            }
+        });
+    });
+
+    $(document).off('click', '.dislike-button').on('click', '.dislike-button', function() {
+        var $btn = $(this);
+        var commentId = $btn.data('comment-id');
+        var countSpan = $('#dislike-count-' + commentId);
+
+        $.ajax({
+            url: '/movies/comments/' + commentId + '/dislike/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                countSpan.text(response.dislikes);
+                if (response.disliked) {
+                    $btn.addClass('active');
+                } else {
+                    $btn.removeClass('active');
+                }
+            }
+        });
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    // Show/hide reply form
+    $('.reply-btn').click(function() {
+        var commentId = $(this).data('comment-id');
+        $('#reply-form-' + commentId).toggle();
+    });
+
+    // Handle reply form submission
+    $('.reply-form').submit(function(e) {
+        e.preventDefault();
+        var $form = $(this);
+        var parentId = $form.data('parent-id');
+        var text = $form.find('textarea[name="text"]').val();
+        $.ajax({
+            url: '/movies/comments/' + parentId + '/reply/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'text': text
+            },
+            success: function(response) {
+                // Build the reply HTML
+                var replyHtml = `
+    <li class="comments__item comments__item--answer">
+        <div class="comments__autor">
+            <img class="comments__avatar" src="/static/img/user.png" alt="profile picture">
+            <span class="comments__name">${response.user}</span>
+            <span class="comments__time">${response.created_at}</span>
+        </div>
+        <p class="comments__text">${response.text}</p>
+    </li>`;
+                // Append to the replies list after the parent comment
+                $form.closest('.comments__item').find('ul').append(replyHtml);
+                $form[0].reset();
+                $form.parent().hide();
+            }
+        });
+    });
+});
+</script>

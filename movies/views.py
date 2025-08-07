@@ -5,6 +5,21 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import Comment
+
+@require_POST
+def comment_dislike(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+        comment.dislikes += 1
+        comment.save()
+        return JsonResponse({'dislikes': comment.dislikes})
+    except Comment.DoesNotExist:
+        return JsonResponse({'error': 'Comment not found'}, status=404)
 # from views  import 
 
 def MovieHome(request):
@@ -31,12 +46,16 @@ def MovieHome(request):
 
     
 
+# def GetMovieCategory(category):
+#     nollyWoodObj=Movie(categories=category)
+#     nollyWood = nollyWoodObj.categories
+#     # nollywoodMovies = nollyWoodObj.get_categories_display()
+#     movieCategory = Movie.objects.filter(categories=nollyWood)
+#     return movieCategory
+
 def GetMovieCategory(category):
-    nollyWoodObj=Movie(categories=category)
-    nollyWood = nollyWoodObj.categories
-    # nollywoodMovies = nollyWoodObj.get_categories_display()
-    movieCategory = Movie.objects.filter(categories=nollyWood)
-    return movieCategory
+    return Movie.objects.filter(categories__name=category)
+
 
 
 from django.shortcuts import get_object_or_404, render, redirect
@@ -51,6 +70,13 @@ def movie_detail(request, id):
     movie = get_object_or_404(Movie, id=id)
     ratings = movie.ratings.all()
     average_rating = movie.average_rating()
+    # Get categories of the current movie
+    categories = movie.categories.all()
+    # Find related movies sharing at least one category, excluding the current movie
+    suggestions = Movie.objects.filter(categories__in=categories).exclude(id=movie.id).distinct()[:6]
+    photos = movie.photos.all()
+    reviews = Review.objects.filter(movie=movie).select_related('user')  
+    
 
     if request.method == "POST":
         # Handle Like Button Click
@@ -83,6 +109,9 @@ def movie_detail(request, id):
         "average_rating": average_rating,
         "form": form,
         "comments": comments,
+        "suggestions": suggestions,
+        "photos": photos,
+        "reviews": reviews,
 })
 
 
@@ -134,8 +163,6 @@ def movie_reviews(request, movie_id):
      # Get parent comments for the logged-in user
     parent_comments = [comment for comment in comments if comment.is_parent() and comment.user == request.user]
 
-    print(movie)
-    print(reviews)
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
@@ -212,3 +239,49 @@ def check_parent_comment(request, comment_id):
         return False
     except Comment.DoesNotExist:
         return False
+
+
+@require_POST
+@login_required
+def comment_dislike(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    user = request.user
+    if user in comment.dislikes.all():
+        comment.dislikes.remove(user)
+        disliked = False
+    else:
+        comment.dislikes.add(user)
+        disliked = True
+    return JsonResponse({'dislikes': comment.dislikes.count(), 'disliked': disliked})
+
+
+@require_POST
+@login_required
+def comment_like(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    user = request.user
+    if user in comment.likes.all():
+        comment.likes.remove(user)
+        liked = False
+    else:
+        comment.likes.add(user)
+        liked = True
+    return JsonResponse({'likes': comment.likes.count(), 'liked': liked})
+
+@require_POST
+@login_required
+def comment_reply(request, parent_id):
+    parent = Comment.objects.get(id=parent_id)
+    text = request.POST.get('text')
+    reply = Comment.objects.create(
+        user=request.user,
+        text=text,
+        parent=parent,
+        movie = parent.movie
+    )
+    return JsonResponse({
+        'user': reply.user.username,
+      #  'user_avatar': reply.user.profile_picture.url if reply.user.profile_picture else '/static/img/user.png',
+        'created_at': reply.created_at.strftime('%Y-%m-%d %H:%M'),
+        'text': reply.text
+    })

@@ -21,6 +21,12 @@ MOVIE_CHOICES = [
         ("KOR", "Korean"),
     ]
 
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+    
 class Movie(models.Model):
     title = models.CharField(max_length=250)
     genre = models.CharField(max_length=250)
@@ -34,7 +40,8 @@ class Movie(models.Model):
     producer = models.CharField(max_length=250)
     rating = models.DecimalField(default=4.0, max_digits=5, decimal_places=1)
     video_path = models.CharField(max_length=500)
-    categories = models.CharField(choices=MOVIE_CHOICES, max_length=250)
+    categories = models.ManyToManyField(Category)
+    # categories = models.CharField(choices=MOVIE_CHOICES, max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_series = models.BooleanField(default=False) 
@@ -128,8 +135,8 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # User who made the comment
     text = models.TextField()  # Comment text
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp
-    likes = models.IntegerField(default=0)  # Like count
-    dislikes = models.IntegerField(default=0)  # Dislike count
+    likes = models.ManyToManyField(User, related_name='liked_comments', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='disliked_comments', blank=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="comments")  # Ensure 'movie' is used
     # Parent comment for replies
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
@@ -143,3 +150,15 @@ class Comment(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.text[:30]}"
+
+class MoviePhoto(models.Model):
+    movie = models.ForeignKey(Movie, related_name='photos', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='movie_photos/')
+    caption = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Photo for {self.movie.title}"
+
+# Example of setting categories correctly
+# movie = Movie.objects.create(...)  # or movie.save() if already created
+# movie.categories.add(cat1)  # ✅ Correct way

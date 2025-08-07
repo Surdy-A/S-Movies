@@ -480,37 +480,121 @@ $(document).ready(function () {
 		return false;
 	}
 	$(window).on('load', initializeThirdSlider());
+
+	$(document).ready(function() {
+		"use strict"
+    // Like button toggle
+    $(document).off('click', '.like-button').on('click', '.like-button', function() {
+        var $btn = $(this);
+        var commentId = $btn.data('comment-id');
+        var countSpan = $('#like-count-' + commentId);
+
+        $.ajax({
+            url: '/movies/comments/' + commentId + '/like/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': window.CSRF_TOKEN
+            },
+            success: function(response) {
+                countSpan.text(response.likes);
+                if (response.liked) {
+                    $btn.addClass('active');
+                } else {
+                    $btn.removeClass('active');
+                }
+            }
+        });
+    });
+
+    // Dislike button toggle
+    $(document).off('click', '.dislike-button').on('click', '.dislike-button', function() {
+        var $btn = $(this);
+        var commentId = $btn.data('comment-id');
+        var countSpan = $('#dislike-count-' + commentId);
+
+        $.ajax({
+            url: '/movies/comments/' + commentId + '/dislike/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': window.CSRF_TOKEN
+            },
+            success: function(response) {
+                countSpan.text(response.dislikes);
+                if (response.disliked) {
+                    $btn.addClass('active');
+                } else {
+                    $btn.removeClass('active');
+                }
+            }
+        });
+    });
+
+    // Show/hide reply form
+    $(document).off('click', '.reply-btn').on('click', '.reply-btn', function() {
+        var commentId = $(this).data('comment-id');
+        $('#reply-form-' + commentId).toggle();
+    });
+
+    // Handle reply form submission
+    $(document).off('submit', '.reply-form').on('submit', '.reply-form', function(e) {
+        e.preventDefault();
+        var $form = $(this);
+        var parentId = $form.data('parent-id');
+        var text = $form.find('textarea[name="text"]').val();
+        $.ajax({
+            url: '/movies/comments/' + parentId + '/reply/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': window.CSRF_TOKEN,
+                'text': text
+            },
+            success: function(response) {
+                var replyHtml = `
+    <li class="comments__item comments__item--answer">
+        <div class="comments__autor">
+            <img class="comments__avatar" src="/static/img/user.png" alt="profile picture">
+            <span class="comments__name">${response.user}</span>
+            <span class="comments__time">${response.created_at}</span>
+        </div>
+        <p class="comments__text">${response.text}</p>
+    </li>`;
+                $form.closest('.comments__item').find('ul').append(replyHtml);
+                $form[0].reset();
+                $form.parent().hide();
+            }
+        });
+    });
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-	document.querySelectorAll(".like-button").forEach(button => {
-		button.addEventListener("click", function () {
-			let commentId = this.getAttribute("data-comment-id");
+    document.querySelectorAll(".like-button").forEach(button => {
+        button.addEventListener("click", function () {
+            let commentId = this.getAttribute("data-comment-id");
 
-			fetch(`/comment/${commentId}/like/`, {
-				method: "POST",
-				headers: {
-					"X-CSRFToken": "{{ csrf_token }}",
-					"Content-Type": "application/json"
-				},
-			})
-			.then(response => response.json())
-			.then(data => {
-				if (data.likes !== undefined) {
-					document.getElementById(`like-count-${commentId}`).innerText = data.likes;
-				}
-			})
-			.catch(error => console.error("Error:", error));
-		});
-	});
+            fetch(`/comment/${commentId}/like/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": window.CSRF_TOKEN,
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.likes !== undefined) {
+                    document.getElementById(`like-count-${commentId}`).innerText = data.likes;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    });
 });
 
 
 
 document.addEventListener("DOMContentLoaded", function () {
-	document.querySelectorAll(".like-form").forEach(form => {
-		form.addEventListener("submit", function (event) {
-			event.preventDefault();  // Prevent full page reload
+    document.querySelectorAll(".like-form").forEach(form => {
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();  // Prevent full page reload
 			
 			let formData = new FormData(this);
 
@@ -526,6 +610,8 @@ document.addEventListener("DOMContentLoaded", function () {
 				}
 			})
 			.catch(error => console.error("Error:", error));
-		});
-	});
+        });
+    });
 });
+
+

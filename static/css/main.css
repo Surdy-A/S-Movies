@@ -45,6 +45,8 @@ html {
 html,
 body {
   height: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 body {
   font-family: "Ubuntu", sans-serif;
@@ -3743,5 +3745,20 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   color: white !important;
   font-weight: bold !important;
   border-top:0px !important;
+}
+
+img, table {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+video, .plyr {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 

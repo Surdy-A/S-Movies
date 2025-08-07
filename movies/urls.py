@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import MovieHome, movie_list, movie_detail, series_movie_detail, movie_reviews, search_movies, rate_movie
+from .views import (MovieHome, movie_list, movie_detail, 
+                    series_movie_detail, movie_reviews, search_movies, 
+                    rate_movie, comment_dislike, comment_like, comment_reply)
 from django.conf.urls import handler404
 
 app_name = 'movies'
@@ -14,6 +16,9 @@ urlpatterns = [
     path('movie/<int:movie_id>/reviews/', movie_reviews, name='movie_reviews'),
     path('search/', search_movies, name='search_movies'),
     path("rate/<int:movie_id>/", rate_movie, name="rate_movie"),
+    path('comments/<int:comment_id>/dislike/', comment_dislike, name='comment_dislike'),
+    path('comments/<int:comment_id>/like/', comment_like, name='comment_like'),
+    path('comments/<int:parent_id>/reply/', comment_reply, name='comment_reply'),
 ]
 
 # GenuineRashy@8229
