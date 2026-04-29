@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'smovies_db',
         'USER': 'postgres',
-        'PASSWORD': 'Goodman8349**',
+        'PASSWORD': 'Goodman8349#',
         'HOST': 'localhost',
         'PORT': '5432', # default PostgreSQL port
     }

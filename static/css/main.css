@@ -1,43 +1,3 @@
-/*----------------------------------------
-[Master Stylesheet]
-
-Project:	FlixGo
-Version:	1.0
-Primary use:	FlixGo Template
-----------------------------------------*/
-/*----------------------------------------
-[Table of contents]
-
-1. Header
-2. Home
-3. Content
-4. Section
-5. Breadcrumb
-6. Card
-7. Details
-8. FAQ
-9. How
-10. Partners
-11. Price
-12. Feature
-13. Catalog
-14. Filter
-15. Paginator
-16. Comments
-17. Reviews
-18. Form
-19.	Gallery
-20. Accordion
-21. Footer
-22. Sign
-23. Page 404
-24. Plyr customization
-25. PhotoSwipe customization
-26. mCustomScrollbar customization
-----------------------------------------*/
-/*==============================
-	Common styles
-==============================*/
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -3762,3 +3722,53 @@ video, .plyr {
     box-sizing: border-box;
 }
 
+/* ===== FIX BIG SLIDER ISSUE ===== */
+.home__carousel .item {
+    padding: 10px;
+}
+
+/* NORMAL CARD SIZE */
+.card {
+    background: transparent;
+    border: none;
+}
+
+/* IMAGE SIZE LIKE YOUR TARGET DESIGN */
+.card__cover img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* REMOVE ANY FULL WIDTH STRETCH */
+.card__cover {
+    width: 100%;
+}
+
+/* TEXT STYLING */
+.card__title {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.card__category a {
+    font-size: 13px;
+    color: #ff55a5;
+}
+
+/* REMOVE CENTERING THAT BREAKS GRID */
+.home__carousel {
+    margin-top: 10px;
+}
+
+/* FIX NAV POSITION */
+.home__nav {
+    position: absolute;
+    top: -50px;
+    right: 0;
+}
+
+.home__nav--prev {
+    right: 50px;
+}

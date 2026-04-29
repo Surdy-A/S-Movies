@@ -3,6 +3,7 @@ from .views import (MovieHome, movie_list, movie_detail,
                     series_movie_detail, movie_reviews, search_movies, 
                     rate_movie, comment_dislike, comment_like, comment_reply)
 from django.conf.urls import handler404
+from . import views
 
 app_name = 'movies'
 handler404 = 'movies.views.custom_404_view'
@@ -19,6 +20,7 @@ urlpatterns = [
     path('comments/<int:comment_id>/dislike/', comment_dislike, name='comment_dislike'),
     path('comments/<int:comment_id>/like/', comment_like, name='comment_like'),
     path('comments/<int:parent_id>/reply/', comment_reply, name='comment_reply'),
+    path('genre/<str:genre>/', views.movies_by_genre, name='movies_by_genre'),
 ]
 
 # GenuineRashy@8229

@@ -17,7 +17,6 @@
 			<div class="row">
 				<div class="col-12">
 					<h1 class="home__title">Place Your <b>Advertisement</b> HERE</h1>
-
 					<button class="home__nav home__nav--prev" type="button">
 						<i class="icon ion-ios-arrow-round-back"></i>
 					</button>
@@ -30,9 +29,29 @@
 					<div class="owl-carousel home__carousel">
 						<div class="item">
 							<!-- card -->
-							<div class="card card--big">
+							<div class="card">
 								<div class="card__cover">
 									<img src="{% static 'img/covers/cover.jpg' %}" alt="">
+									<a href="#" class="card__play">
+										<i class="icon ion-ios-play"></i>
+									</a>
+								</div>
+								 <div class="card__content">
+									<h3 class="card__title"><a href="">Advert</a></h3>
+									<span class="card__category">
+										<a href="#">Advert</a>
+									</span>
+									<!-- <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span> -->
+								</div>
+							</div>
+							<!-- end card -->
+						</div>
+
+						<div class="item">
+							<!-- card -->
+							<div class="card">
+								<div class="card__cover">
+									<img src="{% static 'img/covers/cover2.jpg' %}" alt="">
 									<a href="#" class="card__play">
 										<i class="icon ion-ios-play"></i>
 									</a>
@@ -46,7 +65,6 @@
 								</div>
 							</div>
 							<!-- end card -->
-					
 						</div>
 					</div>
 				</div>
@@ -56,7 +74,7 @@
 	<!-- end home -->
 
 	<!-- expected premiere -->
-	<section class="section section--bg" data-bg="img/section/section.jpg">
+	<section class="section section--bg" data-bg="{% static 'img/section/section.jpg' %}">
 		<div class="container">
 			<div class="row">
 				<!-- section title -->
@@ -85,7 +103,7 @@
 							
 							</h3>
 							<span class="card__category">
-								<a href="#">{{movie.genre}}</a>
+								<a href="{% url 'movies:movies_by_genre' movie.genre %}">{{movie.genre}}</a>
 							</span>
 							<span class="card__rate"><i class="icon ion-ios-star"></i>{{ratings}}</span>
 						</div>

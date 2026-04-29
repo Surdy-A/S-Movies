@@ -285,3 +285,13 @@ def comment_reply(request, parent_id):
         'created_at': reply.created_at.strftime('%Y-%m-%d %H:%M'),
         'text': reply.text
     })
+
+
+def movies_by_genre(request, genre):
+    movies = Movie.objects.filter(genre__iexact=genre)
+
+    context = {
+        'movies': movies,
+        'genre': genre
+    }
+    return render(request, 'genre_list.html', context)
