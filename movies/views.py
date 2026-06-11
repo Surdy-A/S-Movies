@@ -69,7 +69,7 @@ from django.http import JsonResponse
 def movie_detail(request, id):
     movie = get_object_or_404(Movie, id=id)
     ratings = movie.ratings.all()
-    average_rating = movie.average_rating()
+    average_rating = movie.average_rating
     # Get categories of the current movie
     categories = movie.categories.all()
     # Find related movies sharing at least one category, excluding the current movie

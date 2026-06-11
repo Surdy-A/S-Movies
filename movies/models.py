@@ -1,5 +1,6 @@
 import os
 from django.db import models
+from django.db.models import Avg
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.utils import timezone
@@ -26,6 +27,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name_plural = "Categories"
+        
     
 class Movie(models.Model):
     title = models.CharField(max_length=250)
@@ -54,9 +59,12 @@ class Movie(models.Model):
     def get_absolute_url(self):
         return reverse("movies:movie_detail", kwargs={"id": self.id})
     
+    @property
     def average_rating(self):
-        ratings = self.ratings.all()
-        return ratings.aggregate(models.Avg('score'))['score__avg'] if ratings else 0
+        avg = self.ratings.aggregate(avg=Avg('score'))['avg']
+        if avg is not None:
+            return round(float(avg), 1)
+        return round(float(self.rating or 0.0), 1)
 
     def __str__(self):
         return str('%s - %s' % (self.title, self.producer))
