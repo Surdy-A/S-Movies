@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Movie, Rating, Season, Comment, Review
+from .models import Movie, Rating, Season, Comment, Review, Genre
 from .forms import CommentForm
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Comment
+from django.core.paginator import Paginator
 
 @require_POST
 def comment_dislike(request, comment_id):
@@ -28,12 +29,12 @@ def MovieHome(request):
         latestMovies = Movie.objects.order_by('-created_at')[:5] 
         #latestMovies = Movie.objects.latest('created_at')
         
-    nollyWoodMovies = GetMovieCategory("Nolly")
-    nollyWoodMoviesSeries = GetMovieCategory("Nolly-S")
-    hollyWoodMovies = GetMovieCategory("Holly")
-    hollyWoodMoviesSeries = GetMovieCategory("Holly-S")
-    foreign = GetMovieCategory("FOR")
-    korean = GetMovieCategory("KOR")
+    nollyWoodMovies = GetMovieCategory("nollywood")
+    nollyWoodMoviesSeries = GetMovieCategory("nollywood-series")
+    hollyWoodMovies = GetMovieCategory("hollywood")
+    hollyWoodMoviesSeries = GetMovieCategory("hollywood-series")
+    foreign = GetMovieCategory("foreign")
+    korean = GetMovieCategory("korean")
     return render(request, "movie-homepage.html", {"latestMovies": latestMovies, 
                                                    'nollyWoodMoviesList':nollyWoodMovies[:6],
            
@@ -118,23 +119,23 @@ def movie_detail(request, id):
 
 
 def movie_list(request, cat):
-    if cat == "Nolly":
-        movies = GetMovieCategory("Nolly")
+    if cat == "nollywood":
+        movies = GetMovieCategory("nollywood")
         categoryName = "Nollywood"
-    elif cat == "Nolly-S":
-        movies = GetMovieCategory("Nolly-S")
+    elif cat == "nollywood-series":
+        movies = GetMovieCategory("nollywood-series")
         categoryName = "Nollywood Series"
-    elif cat == "Holly":
-        movies = GetMovieCategory("Holly")
+    elif cat == "hollywood":
+        movies = GetMovieCategory("hollywood")
         categoryName = "Hollywood"
-    elif cat == "Holly-S":
-        movies = GetMovieCategory("Holly-S")
+    elif cat == "hollywood-series":
+        movies = GetMovieCategory("hollywood-series")
         categoryName = "Hollywood Series"
-    elif cat == "FOR":
-        movies = GetMovieCategory("FOR")
+    elif cat == "foreign":
+        movies = GetMovieCategory("foreign")
         categoryName = "Foreign"
-    elif cat == "KOR":
-        movies = GetMovieCategory("KOR")
+    elif cat == "korean":
+        movies = GetMovieCategory("korean")
         categoryName = "Korean"
 
     else:
@@ -142,7 +143,15 @@ def movie_list(request, cat):
         categoryName = "No Corresponding"
         movies = Movie.objects.none()
     
-    return render(request, 'movie_list.html', {"movies":movies, "category":categoryName})
+    genres = Genre.objects.all().order_by('name')
+    print("Genre count:", genres.count())
+    print("Genres:", list(genres))
+    # Pagination
+    paginator = Paginator(movies, 24)  # 24 movies per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'movie_list.html', {"movies":movies, "category":categoryName, "page_obj":page_obj, "genres":genres})
 
 
 def series_movie_detail(request, movie_id):
@@ -288,8 +297,8 @@ def comment_reply(request, parent_id):
 
 
 def movies_by_genre(request, genre):
-    movies = Movie.objects.filter(genre__iexact=genre)
-
+    movies = Movie.objects.filter(genres__name__iexact=genre)
+    print(movies)
     context = {
         'movies': movies,
         'genre': genre

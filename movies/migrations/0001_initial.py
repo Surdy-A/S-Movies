@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('producer', models.CharField(max_length=250)),
                 ('rating', models.DecimalField(decimal_places=1, default=4.0, max_digits=5)),
                 ('video_path', models.CharField(max_length=500)),
-                ('categories', models.CharField(choices=[('Nolly', 'Nollywood'), ('Nolly-S', 'Nollywood Series'), ('Holly', 'Hollywood'), ('Holly-S', 'Hollywood Series'), ('FOR', 'Foreign'), ('KOR', 'Korean')], max_length=250)),
+                ('categories', models.CharField(choices=[('nollywood', 'nollywood'), ('nollywood-series', 'nollywood-series'), ('hollywood', 'hollywood'), ('hollywood-series', 'hollywood-series'), ('foreign', 'Foreign'), ('korean', 'korean')], max_length=250)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('is_series', models.BooleanField(default=False)),

@@ -46,7 +46,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <input type="button" value="Action/Adventure" />
+                <input type="button" value="Action" />
                 <span></span>
               </div>
 
@@ -54,42 +54,10 @@
                 class="filter__item-menu dropdown-menu scrollbar-dropdown"
                 aria-labelledby="filter-genre"
               >
-                <li>Action/Adventure</li>
-                <li>Animals</li>
-                <li>Animation</li>
-                <li>Biography</li>
-                <li>Comedy</li>
-                <li>Cooking</li>
-                <li>Dance</li>
-                <li>Documentary</li>
-                <li>Drama</li>
-                <li>Education</li>
-                <li>Entertainment</li>
-                <li>Family</li>
-                <li>Fantasy</li>
-                <li>History</li>
-                <li>Horror</li>
-                <li>Independent</li>
-                <li>International</li>
-                <li>Kids</li>
-                <li>Kids & Family</li>
-                <li>Medical</li>
-                <li>Military/War</li>
-                <li>Music</li>
-                <li>Musical</li>
-                <li>Mystery/Crime</li>
-                <li>Nature</li>
-                <li>Paranormal</li>
-                <li>Politics</li>
-                <li>Racing</li>
-                <li>Romance</li>
-                <li>Sci-Fi/Horror</li>
-                <li>Science</li>
-                <li>Science Fiction</li>
-                <li>Science/Nature</li>
-                <li>Spanish</li>
-                <li>Travel</li>
-                <li>Western</li>
+                                    <li><a href="{% url 'movies:movies_by_genre' 'Action' %}">Action</a></li>
+                                    <li><a href="{% url 'movies:movies_by_genre' 'Adventure' %}">Adventure</a></li>
+                                    <li><a href="{% url 'movies:movies_by_genre' 'Comedy' %}">Comedy</a></li>
+                                    <li><a href="{% url 'movies:movies_by_genre' 'Drama' %}">Drama</a></li>
               </ul>
             </div>
             <!-- end filter item -->
@@ -124,7 +92,7 @@
 
             <!-- filter item -->
             <div class="filter__item" id="filter__rate">
-              <span class="filter__item-label">IMBd:</span>
+              <span class="filter__item-label">Rate:</span>
 
               <div
                 class="filter__item-btn dropdown-toggle"

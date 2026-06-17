@@ -1,7 +1,7 @@
-Nollywood Movies
-Nollywood Series
-Hollywood Movies
-Korean Movies
+nollywood Movies
+nollywood-series
+hollywood Movies
+korean Movies
 Foreign Movies
 Japan Movie
 Chinese Movies

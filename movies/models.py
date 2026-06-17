@@ -12,14 +12,15 @@ from urllib.parse import urlparse
 import yt_dlp
 from django.conf import settings
 from django.utils.timezone import now
+from django.utils.text import slugify
 
 MOVIE_CHOICES = [
-        ("Nolly", "Nollywood"),
-        ("Nolly-S", "Nollywood Series"),
-        ("Holly", "Hollywood"),
-        ("Holly-S", "Hollywood Series"),
-        ("FOR", "Foreign"),
-        ("KOR", "Korean"),
+        ("nollywood", "nollywood"),
+        ("nollywood-series", "nollywood-series"),
+        ("hollywood", "hollywood"),
+        ("hollywood-series", "hollywood-series"),
+        ("foreign", "Foreign"),
+        ("korean", "korean"),
     ]
 
 class Category(models.Model):
@@ -31,10 +32,25 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Categories"
         
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True)
+
+    seo_title = models.CharField(max_length=255, blank=True)
+    seo_description = models.TextField(blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
     
 class Movie(models.Model):
     title = models.CharField(max_length=250)
-    genre = models.CharField(max_length=250)
+    # genre = models.CharField(max_length=250)
+    genres = models.ManyToManyField(Genre, blank=True)
     year = models.CharField(max_length=250)
     country = models.CharField(max_length=250)
     language = models.CharField(max_length=250)
@@ -57,6 +73,7 @@ class Movie(models.Model):
                                      options={'quality': 95})
     
     def get_absolute_url(self):
+        print(genres)  # Debugging line to check the movie ID
         return reverse("movies:movie_detail", kwargs={"id": self.id})
     
     @property
@@ -69,6 +86,7 @@ class Movie(models.Model):
     def __str__(self):
         return str('%s - %s' % (self.title, self.producer))
 
+    
 
     def is_url(self):
         """Check if the video_path is an online URL."""

@@ -9,9 +9,8 @@
       <div class="col-12">
         <div class="section__wrap">
           <!-- section title -->
-          <h2 class="section__title">{{category}} Movies</h2>
+          <h2 class="section__title">{{ category }} Movies</h2>
           <!-- end section title -->
-
           <!-- breadcrumb -->
           <ul class="breadcrumb">
             <li class="breadcrumb__item"><a href="/movies">Home</a></li>
@@ -26,7 +25,7 @@
   </div>
 </section>
 <!-- end page title -->
-
+<!-- filter -->
 <!-- filter -->
 <div class="filter">
   <div class="container">
@@ -54,42 +53,9 @@
                 class="filter__item-menu dropdown-menu scrollbar-dropdown"
                 aria-labelledby="filter-genre"
               >
-                <li>Action/Adventure</li>
-                <li>Animals</li>
-                <li>Animation</li>
-                <li>Biography</li>
-                <li>Comedy</li>
-                <li>Cooking</li>
-                <li>Dance</li>
-                <li>Documentary</li>
-                <li>Drama</li>
-                <li>Education</li>
-                <li>Entertainment</li>
-                <li>Family</li>
-                <li>Fantasy</li>
-                <li>History</li>
-                <li>Horror</li>
-                <li>Independent</li>
-                <li>International</li>
-                <li>Kids</li>
-                <li>Kids & Family</li>
-                <li>Medical</li>
-                <li>Military/War</li>
-                <li>Music</li>
-                <li>Musical</li>
-                <li>Mystery/Crime</li>
-                <li>Nature</li>
-                <li>Paranormal</li>
-                <li>Politics</li>
-                <li>Racing</li>
-                <li>Romance</li>
-                <li>Sci-Fi/Horror</li>
-                <li>Science</li>
-                <li>Science Fiction</li>
-                <li>Science/Nature</li>
-                <li>Spanish</li>
-                <li>Travel</li>
-                <li>Western</li>
+                {% comment %} {% for genre in movie.genres.all %}
+                <a href="/movies?genre={{ genre.slug }}"> {{ genre.name }} </a>
+                {% endfor %} {% endcomment %}
               </ul>
             </div>
             <!-- end filter item -->
@@ -124,7 +90,7 @@
 
             <!-- filter item -->
             <div class="filter__item" id="filter__rate">
-              <span class="filter__item-label">IMBd:</span>
+              <span class="filter__item-label">Rating:</span>
 
               <div
                 class="filter__item-btn dropdown-toggle"
@@ -188,7 +154,7 @@
   </div>
 </div>
 <!-- end filter -->
-
+<!-- end filter -->
 <!-- catalog -->
 <div class="catalog">
   <div class="container">
@@ -198,7 +164,7 @@
       <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
         <div class="card">
           <div class="card__cover">
-            <img src="{{movie.image.url}}" alt="" />
+            <img src="{{ movie.image.url }}" alt="" />
             <a
               href="{% url 'movies:movie_detail' id=movie.id %}"
               class="card__play"
@@ -209,14 +175,19 @@
           <div class="card__content">
             <h3 class="card__title">
               <a href="{% url 'movies:movie_detail' id=movie.id %}"
-                >{{movie.title}}</a
+                >{{ movie.title }} {{movie.genres}}</a
               >
             </h3>
             <span class="card__category">
-              <a href="#">{{movie.genre}}</a>
+              {% for genre in genres %}
+              {{genre.name}}
+              {% endfor %}
+              {% comment %} <a href="{% url 'movies:movies_by_genre' movie.genre %}"
+                >{{ movie.genre }}</a {% endcomment %}
+              {% comment %} > {% endcomment %}
             </span>
             <span class="card__rate"
-              ><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span
+              ><i class="icon ion-ios-star"></i>{{ movie.average_rating }}</span
             >
           </div>
         </div>
@@ -226,18 +197,32 @@
       <!-- paginator -->
       <div class="col-12">
         <ul class="paginator">
+          <!-- Previous Button -->
+          {% if page_obj.has_previous %}
           <li class="paginator__item paginator__item--prev">
-            <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
+            <a href="?page={{ page_obj.previous_page_number }}">
+              <i class="icon ion-ios-arrow-back"></i>
+            </a>
           </li>
-          <li class="paginator__item"><a href="#">1</a></li>
+          {% endif %}
+          <!-- Page Numbers -->
+          {% for num in page_obj.paginator.page_range %} {% if page_obj.number == num %}
           <li class="paginator__item paginator__item--active">
-            <a href="#">2</a>
+            <a href="?page={{ num }}">{{ num }}</a>
           </li>
-          <li class="paginator__item"><a href="#">3</a></li>
-          <li class="paginator__item"><a href="#">4</a></li>
+          {% else %}
+          <li class="paginator__item">
+            <a href="?page={{ num }}">{{ num }}</a>
+          </li>
+          {% endif %} {% endfor %}
+          <!-- Next Button -->
+          {% if page_obj.has_next %}
           <li class="paginator__item paginator__item--next">
-            <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
+            <a href="?page={{ page_obj.next_page_number }}">
+              <i class="icon ion-ios-arrow-forward"></i>
+            </a>
           </li>
+          {% endif %}
         </ul>
       </div>
       <!-- end paginator -->

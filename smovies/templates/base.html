@@ -67,12 +67,12 @@
 									<a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuCatalog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Movies</a>
 
 									<ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
-										<li><a href="catalog1.html">Nollywood</a></li>
-										<li><a href="catalog2.html">Nollywood Series</a></li>
-										<li><a href="details1.html">Hollywood</a></li>
-										<li><a href="details2.html">Hollywood Series</a></li>
-										<li><a href="details2.html">Hollywood Series</a></li>
-										<li><a href="/movies/category/KOR">Korean Movies</a></li>
+										<li><a href="catalog1.html">nollywood</a></li>
+										<li><a href="catalog2.html">nollywood-series</a></li>
+										<li><a href="details1.html">hollywood</a></li>
+										<li><a href="details2.html">hollywood-series</a></li>
+										<li><a href="details2.html">hollywood-series</a></li>
+										<li><a href="/movies/category/korean">korean Movies</a></li>
 									</ul>
 								</li>
 								<!-- end dropdown -->
@@ -184,42 +184,7 @@
 								</div>
 
 								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-genre">
-									<li>Action/Adventure</li>
-									<li>Animals</li>
-									<li>Animation</li>
-									<li>Biography</li>
-									<li>Comedy</li>
-									<li>Cooking</li>
-									<li>Dance</li>
-									<li>Documentary</li>
-									<li>Drama</li>
-									<li>Education</li>
-									<li>Entertainment</li>
-									<li>Family</li>
-									<li>Fantasy</li>
-									<li>History</li>
-									<li>Horror</li>
-									<li>Independent</li>
-									<li>International</li>
-									<li>Kids</li>
-									<li>Kids & Family</li>
-									<li>Medical</li>
-									<li>Military/War</li>
-									<li>Music</li>
-									<li>Musical</li>
-									<li>Mystery/Crime</li>
-									<li>Nature</li>
-									<li>Paranormal</li>
-									<li>Politics</li>
-									<li>Racing</li>
-									<li>Romance</li>
-									<li>Sci-Fi/Horror</li>
-									<li>Science</li>
-									<li>Science Fiction</li>
-									<li>Science/Nature</li>
-									<li>Spanish</li>
-									<li>Travel</li>
-									<li>Western</li>
+                                    <li><a href="{% url 'movies:movies_by_genre' 'Action' %}">Action</a></li>
 								</ul>
 							</div>
 							<!-- end filter item -->
