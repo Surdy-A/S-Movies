@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Movie, Rating, Season, Comment, Review, Genre
+from .models import Movie, Rating, Season, Comment, Review
 from .forms import CommentForm
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -143,15 +143,12 @@ def movie_list(request, cat):
         categoryName = "No Corresponding"
         movies = Movie.objects.none()
     
-    genres = Genre.objects.all().order_by('name')
-    print("Genre count:", genres.count())
-    print("Genres:", list(genres))
     # Pagination
     paginator = Paginator(movies, 24)  # 24 movies per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'movie_list.html', {"movies":movies, "category":categoryName, "page_obj":page_obj, "genres":genres})
+    return render(request, 'movie_list.html', {"movies":movies, "category":categoryName, "page_obj":page_obj})
 
 
 def series_movie_detail(request, movie_id):
@@ -297,10 +294,15 @@ def comment_reply(request, parent_id):
 
 
 def movies_by_genre(request, genre):
-    movies = Movie.objects.filter(genres__name__iexact=genre)
-    print(movies)
-    context = {
-        'movies': movies,
-        'genre': genre
-    }
-    return render(request, 'genre_list.html', context)
+    movies = Movie.objects.filter(
+        genre__iexact=genre
+    )
+
+    return render(
+        request,
+        'movie_list.html',
+        {
+            'movies': movies,
+            'genre': genre,
+        }
+    )

@@ -31,26 +31,10 @@ class Category(models.Model):
     
     class Meta:
         verbose_name_plural = "Categories"
-        
-class Genre(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True)
-
-    seo_title = models.CharField(max_length=255, blank=True)
-    seo_description = models.TextField(blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-    
+            
 class Movie(models.Model):
     title = models.CharField(max_length=250)
-    # genre = models.CharField(max_length=250)
-    genres = models.ManyToManyField(Genre, blank=True)
+    genre = models.CharField(max_length=250)
     year = models.CharField(max_length=250)
     country = models.CharField(max_length=250)
     language = models.CharField(max_length=250)

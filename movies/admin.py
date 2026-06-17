@@ -7,24 +7,13 @@ from .models import (
     Review,
     Category,
     MoviePhoto,
-    Comment,
-    Genre
+    Comment
 )
 
 # -------------------------
 # Rating
 # -------------------------
 admin.site.register(Rating)
-
-# -------------------------
-# Genre Admin
-# -------------------------
-@admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug")
-    search_fields = ("name", "slug")
-    prepopulated_fields = {"slug": ("name",)}
-
 
 # -------------------------
 # Movie Photos Inline
@@ -41,7 +30,6 @@ class MoviePhotoInline(admin.TabularInline):
 class MovieAdmin(admin.ModelAdmin):
     list_display = (
         "title",
-        "get_genres",
         "year",
         "rating",
         "created_at"
@@ -49,13 +37,11 @@ class MovieAdmin(admin.ModelAdmin):
 
     search_fields = (
         "title",
-        "genres__name",
         "year"
     )
 
     list_filter = (
         "year",
-        "genres",
         "rating"
     )
 
