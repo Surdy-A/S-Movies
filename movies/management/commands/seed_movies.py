@@ -58,7 +58,7 @@ class Command(BaseCommand):
             "Korean",
         ]
 
-        for i in range(60):
+        for i in range(500):
 
             movie = Movie.objects.create(
                 title=f"Test Movie {i + 1}",

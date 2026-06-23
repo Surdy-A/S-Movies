@@ -4,13 +4,13 @@ from .forms import CommentForm
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Comment
-from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 @require_POST
 def comment_dislike(request, comment_id):
@@ -148,7 +148,7 @@ def movie_list(request, cat):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'movie_list.html', {"movies":movies, "category":categoryName, "page_obj":page_obj})
+    return render(request, 'movie_list.html', {"movies":page_obj, "category":categoryName, "page_obj":page_obj})
 
 
 def series_movie_detail(request, movie_id):
@@ -298,11 +298,21 @@ def movies_by_genre(request, genre):
         genre__iexact=genre
     )
 
+    paginator = Paginator(movies, 24)  # 24 movies per page
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        raise Http404("Page does not exist")
+        
     return render(
         request,
-        'movie_list.html',
+        'genre_list.html',
         {
-            'movies': movies,
+            'movies': page_obj,
             'genre': genre,
+            'page_obj': page_obj
         }
     )

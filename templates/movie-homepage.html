@@ -120,12 +120,10 @@
               >
               {% endif %}
             </h3>
-            <span class="card__category">
-              {% for genre in movie.genres.all %}
-              <a href="{% url 'movies:movies_by_genre' genre.slug %}">
-                {{ genre.name }}
-              </a>
-              {% endfor %}
+           <span class="card__category">
+			<a href="{% url 'movies:movies_by_genre' movie.genre %}"
+                >{{ movie.genre }}</a
+              >
             </span>
             <span class="card__rate"
               ><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span
@@ -180,11 +178,9 @@
               >
             </h3>
             <span class="card__category">
-              {% for genre in movie.genres.all %}
-              <a href="{% url 'movies:movies_by_genre' genre.slug %}">
-                {{ genre.name }}
-              </a>
-              {% endfor %}
+			<a href="{% url 'movies:movies_by_genre' movie.genre %}"
+                >{{ movie.genre }}</a
+              >
             </span>
             <span class="card__rate"
               ><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span
@@ -241,11 +237,9 @@
               >
             </h3>
             <span class="card__category">
-              {% for genre in movie.genres.all %}
-              <a href="{% url 'movies:movies_by_genre' genre.slug %}">
-                {{ genre.name }}
-              </a>
-              {% endfor %}
+			<a href="{% url 'movies:movies_by_genre' movie.genre %}"
+                >{{ movie.genre }}</a
+              >
             </span>
             <span class="card__rate"
               ><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span
@@ -302,11 +296,9 @@
               >
             </h3>
             <span class="card__category">
-              {% for genre in movie.genres.all %}
-              <a href="{% url 'movies:movies_by_genre' genre.slug %}">
-                {{ genre.name }}
+              <a href="{% url 'movies:movies_by_genre' movie.genre %}">
+                {{ movie.genre }}
               </a>
-              {% endfor %}
             </span>
             <span class="card__rate"
               ><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span
@@ -360,22 +352,15 @@
           <div class="card__content">
             <h3 class="card__title">
               <a href="{% url 'movies:movie_detail' id=movie.id %}"
-                >{{movie.title}} {{movie.genres}}</a
+                >{{movie.title}}</a
 			  >
-				{% for genre in movie.genres.all %}
-    Name: {{ genre.name }}<br>
-    Slug: {{ genre.slug }}<br>
-{% endfor %}
+				
 				</a
               >
-            </h3>
             <span class="card__category">
-			<h1>{{movies.genres.all}}</h1>
-              {% for genre in movie.genres.all %}
-              <a href="{% url 'movies:movies_by_genre' genre.slug %}">
-                {{ genre.name }}
-              </a>
-              {% endfor %}
+			<a href="{% url 'movies:movies_by_genre' movie.genre %}"
+                >{{ movie.genre }}</a
+              >
             </span>
             <span class="card__rate"
               ><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span
@@ -433,11 +418,9 @@
               >
             </h3>
             <span class="card__category">
-              {% for genre in movie.genres.all %}
-              <a href="{% url 'movies:movies_by_genre' genre.slug %}">
-                {{ genre.name }}
-              </a>
-              {% endfor %}
+			<a href="{% url 'movies:movies_by_genre' movie.genre %}"
+                >{{ movie.genre }}</a
+              >
             </span>
             <span class="card__rate"
               ><i class="icon ion-ios-star"></i>{{movie.average_rating}}</span
